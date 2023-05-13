@@ -1,20 +1,10 @@
-//dotenv to accees environment variables defined in the .env file. 
 // Express library for the backend. Docs -> https://expressjs.com/
 // I used the sequelize library to work with my postgres database. Docs -> https://sequelize.org/docs/v6/getting-started/
-require('dotenv').config({path: "./.env"})
 const express = require('express')
 const app = express()
-const {Sequelize} = require('sequelize')
+const sequelize = require('./db.js')
 
-// Set up the database parameters
-const sequelize = new Sequelize({database: 'digitalfuksi', 
-                              username: 'postgres', 
-                              password: process.env.DATABASE_PASSWORD, 
-                              dialect: 'postgres',
-                              port: '3049'
-                            })
-
-// Function to connect to the database. 
+// Function to confirm that we have succesfully connected. 
 const main = async () =>{
   try {
     await sequelize.authenticate();
@@ -24,7 +14,7 @@ const main = async () =>{
   }
 }
 
-// when our site receives a request, we return hello world
+// respond to a get request with hello world
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
 })
