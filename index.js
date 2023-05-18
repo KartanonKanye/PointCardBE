@@ -1,11 +1,13 @@
 // Express library for the backend. Docs -> https://expressjs.com/
 // I used the sequelize library to work with my postgres database. Docs -> https://sequelize.org/docs/v6/getting-started/
-const express = require('express')
 require('dotenv').config({path: "./.env"})
+const express = require('express')
 const app = express()
 const sequelize = require('./db.js')
 const Point = require('./models/point.js')
 const pointRouter = require('./controllers/points')
+
+app.use(express.json())
 
 // Function to confirm that we have succesfully connected. Also creates the Point table 
 const main = async () =>{
@@ -24,8 +26,6 @@ const addPoint = async () => {
   console.log( wappu.toJSON());
 }
 main()
-
-addPoint()
 
 app.use('/api/points', pointRouter)
 app.listen(process.env.PORT, () => {
