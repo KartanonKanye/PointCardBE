@@ -1,1 +1,1 @@
-A digital Fuksi Point Card (DFPC) for fuksis. The DFPC acts as a way for fuksis to keep track of their progress and provide necessary information.
+A digital Fuksi Point Card (DFPC) for fuksis. The DFPC acts as a way for fuksis to keep track of their progress and provide necessary information on how to get points.
