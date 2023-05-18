@@ -12,7 +12,7 @@ pointRouter.get('/', async (request, response) => {
       response.status(500).end()
     } 
 })
-// return a single point if found
+// if the function finds a point then return it
 pointRouter.get('/:id', async (request, response) => {
   const singlePoint = await Point.findByPk(request.params.id)
   if(singlePoint) {
@@ -23,7 +23,7 @@ pointRouter.get('/:id', async (request, response) => {
     response.status(404).end()
   }
 })
-
+// create a new point using the data from the request and save it to the db. the create function from sequelize builds and saves the point
 pointRouter.post('/', async (request, response) => {
   try {
     const newPoint = await Point.create(request.body)
@@ -33,6 +33,15 @@ pointRouter.post('/', async (request, response) => {
     response.status(500).json({message: "failed to create point"}).end()
   }
 })
-
+// find a point and if found delete it.
+pointRouter.delete('/:id', async (request, response) => {
+  const trashPoint = await Point.findByPk(request.params.id)
+  if(trashPoint){
+    await trashPoint.destroy()
+    response.status(204).json({message: "point deleted succesfully"}).end()
+  } else {
+    response.status(502).json({message: "point not found"}).end()
+  }
+})
   
 module.exports = pointRouter
