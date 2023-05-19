@@ -36,12 +36,27 @@ pointRouter.post('/', async (request, response) => {
 // find a point and if found delete it.
 pointRouter.delete('/:id', async (request, response) => {
   const trashPoint = await Point.findByPk(request.params.id)
-  if(trashPoint){
+  if (trashPoint){
     await trashPoint.destroy()
     response.status(204).json({message: "point deleted succesfully"}).end()
   } else {
-    response.status(502).json({message: "point not found"}).end()
+    response.status(404).end()
   }
 })
-  
+
+pointRouter.patch('/:id', async (request, response) => {
+  const updatePoint = await Point.findByPk(request.params.id)
+  if (updatePoint) {
+    try {
+      await updatePoint.update(request.body)
+      response.status(202).end()
+    } catch (error) {
+      console.log(error);
+      response.status(505).json({message: "failed to update point"})
+    }
+  } else {
+    response.status(404).end()
+  }
+})
+
 module.exports = pointRouter
