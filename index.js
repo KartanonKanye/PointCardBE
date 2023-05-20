@@ -6,12 +6,13 @@ const app = express()
 const sequelize = require('./db.js')
 const Point = require('./models/point.js')
 const User = require('./models/user.js')
+const defineAssociations = require('./models/associations.js')
 const pointRouter = require('./controllers/points.js')
 const userRouter = require('./controllers/users.js')
 
 app.use(express.json())
 
-// Function to confirm that we have succesfully connected. Also creates the Point table 
+// Function to confirm that we have succesfully connected.
 const main = async () =>{
   try {
     await sequelize.authenticate();
@@ -20,22 +21,17 @@ const main = async () =>{
     console.error('Unable to connect to the database:', error);
   }
 }
-
-//the sync function creates a tablwe in the db if the table is missing. Also updates the table according to the model if there are differences.
+//the sync function creates a table in the db if the table is missing. Also updates the table according to the model if there are differences.
 const syncTables = async () => {
   await Point.sync()
   await User.sync()
 }
 
-//create a point called wappu. the create function builds the point and then saves it to the database
-const addPoint = async () => {
-  const wappu = await User.create({username: "PV", password: "dgisbest"})
-  console.log( wappu.toJSON());
-}
-
 main()
 
 syncTables()
+
+defineAssociations()
 
 app.use('/api/points', pointRouter)
 app.use('/api/users', userRouter)
