@@ -19,7 +19,11 @@ const main = async () =>{
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
-  //await Point.sync() //if force sync is set to true, the code drops the already existing table after the point created by the addpoint function is inserted. this lead to an empty table. fix this later
+}
+
+//the sync function creates a tablwe in the db if the table is missing. Also updates the table according to the model if there are differences.
+const syncTables = async () => {
+  await Point.sync()
   await User.sync()
 }
 
@@ -28,7 +32,11 @@ const addPoint = async () => {
   const wappu = await User.create({username: "PV", password: "dgisbest"})
   console.log( wappu.toJSON());
 }
+
 main()
+
+syncTables()
+
 app.use('/api/points', pointRouter)
 app.use('/api/users', userRouter)
 app.listen(process.env.PORT, () => {
