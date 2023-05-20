@@ -43,7 +43,7 @@ pointRouter.delete('/:id', async (request, response) => {
     response.status(404).end()
   }
 })
-
+// find a point and update its data with the request data
 pointRouter.patch('/:id', async (request, response) => {
   const updatePoint = await Point.findByPk(request.params.id)
   if (updatePoint) {

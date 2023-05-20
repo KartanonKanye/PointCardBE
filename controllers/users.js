@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const userRouter = require('express').Router()
 const User = require('../models/user')
+const Point = require('../models/point.js')
 
 userRouter.get('/', async (request, response) => {
     try {
@@ -11,6 +12,17 @@ userRouter.get('/', async (request, response) => {
       console.error("Error executing the query: ", error)
       response.status(500).end()
     } 
+})
+
+userRouter.get('/:id', async (request, response) => {
+  const singleUser = await User.findByPk(request.params.id)
+  if(singleUser) {
+    console.log("user found!");
+    response.json(singleUser)
+  } else {
+    console.log("user not found");
+    response.status(404).end()
+  }
 })
 
 userRouter.post('/', async (request, response) => {
@@ -25,4 +37,24 @@ userRouter.post('/', async (request, response) => {
     }
   })
 
+userRouter.delete('/:id', async (request, response) => {
+    const trashUser = await User.findByPk(request.params.id)
+    if (trashUser){
+      await trashUser.destroy()
+      response.status(204).json({message: "user deleted succesfully"}).end()
+    } else {
+      response.status(404).end()
+    }
+  })
+
+  userRouter.patch('/addpoint', async (request, response) => {
+    const achievingUser = await User.findOne({where: {id: request.body.userId}})
+    const userPoint = await Point.findByPk(request.body.pointId)
+    if(achievingUser && userPoint){
+      await achievingUser.addPoint(userPoint)
+      response.status(204).end()
+    } else {
+      response.status(404).end()
+    }
+  })
 module.exports = userRouter
