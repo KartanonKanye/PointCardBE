@@ -1,10 +1,23 @@
+const sequelize = require('../db.js')
+const { DataTypes } = require('sequelize')
 const Point = require('./point.js')
 const User = require('./user.js')
 
-//create the associations between the tables
-const defineAssociations = () => {
-    Point.belongsToMany(User, {through: "userPoints"})
-    User.belongsToMany(Point, {through: "userPoints"})
-}
+const userPoints = sequelize.define('userPoints', {
+    UserId: {
+        type : DataTypes.UUID,
+        references: {
+            model: User,
+            key: 'id'
+        }
+    },
+    PointId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Point,
+            key: 'id'
+        }
+    }
+})
 
-module.exports = defineAssociations
+module.exports = userPoints

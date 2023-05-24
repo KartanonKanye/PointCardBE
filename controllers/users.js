@@ -25,6 +25,22 @@ userRouter.get('/:id', async (request, response) => {
   }
 })
 
+//get all the points of a user
+userRouter.get('/:id/points', async (request, response) => {
+  const user = await User.findByPk(request.params.id)
+  if (user) {
+    try {
+      const usersPoints = await user.getPoints()
+      response.json(usersPoints)
+    } catch (error) {
+      console.error('error getting points: ', error)
+      response.status(500).end()
+    }
+  } else {
+    response.status(404).end()
+  }
+})
+
 userRouter.post('/', async (request, response) => {
     const {username, password} = request.body
     const hashedpassword = await bcrypt.hash(password, 10)

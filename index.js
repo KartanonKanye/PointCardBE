@@ -6,7 +6,7 @@ const app = express()
 const sequelize = require('./db.js')
 const Point = require('./models/point.js')
 const User = require('./models/user.js')
-const defineAssociations = require('./models/associations.js')
+const userPoints = require('./models/associations.js')
 const pointRouter = require('./controllers/points.js')
 const userRouter = require('./controllers/users.js')
 
@@ -25,6 +25,12 @@ const main = async () =>{
 const syncTables = async () => {
   await Point.sync()
   await User.sync()
+  await userPoints.sync()
+}
+//connect the user and point tables through the userpoints table
+const defineAssociations = () => {
+  User.belongsToMany(Point, {through: userPoints})
+  Point.belongsToMany(User, {through: userPoints})
 }
 
 main()
